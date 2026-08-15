@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#0f5b8d">
 <link rel="manifest" href="manifest.json">
-<title>Mi Control Financiero V5.3</title>
+<title>Mi Control Financiero V6</title>
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#f3f6fa;color:#203246;padding-bottom:82px}
 header{background:linear-gradient(135deg,#0d4f83,#1593bd);color:#fff;padding:22px 17px 25px;border-radius:0 0 26px 26px}
@@ -26,10 +26,32 @@ nav button{background:transparent;color:#526273;padding:6px;font-size:10px}nav .
 .menu{position:fixed;right:9px;bottom:66px;background:#fff;border:1px solid #e1e7ed;border-radius:16px;padding:8px;box-shadow:0 8px 25px #0003;z-index:25;width:220px}
 .menu button{display:block;width:100%;text-align:left;margin:3px 0}table{width:100%;border-collapse:collapse;font-size:12px}td,th{padding:7px;border-bottom:1px solid #edf0f3;text-align:left}
 @media(min-width:700px){.grid{grid-template-columns:repeat(4,1fr)}}
-</style>
+
+.lockscreen{position:fixed;inset:0;background:linear-gradient(135deg,#0d4f83,#1593bd);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;color:#fff}
+.lockbox{background:#fff;color:#203246;width:100%;max-width:360px;border-radius:24px;padding:24px;box-shadow:0 15px 45px #0004;text-align:center}
+.lockbox h2{margin:0 0 8px}.lockbox p{font-size:13px;color:#6b7785}.pin{font-size:28px;text-align:center;letter-spacing:10px}
+.pinrow{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:14px}.pinrow button{font-size:20px;padding:14px;background:#edf4f8;color:#125d8f}.lockerr{color:#b63a34;min-height:20px;font-size:13px}
+
 </head>
 <body>
-<header><h1>💰 Mi Control Financiero</h1><div class="sub">V5.3 · control diario + cuentas + inversiones + mercado</div></header>
+
+<div id="lockscreen" class="lockscreen hidden">
+  <div class="lockbox">
+    <div style="font-size:42px">🔐</div>
+    <h2>Mi Control Financiero</h2>
+    <p>Este espacio es privado y se guarda en este dispositivo.</p>
+    <input id="pinInput" class="pin" type="password" inputmode="numeric" maxlength="6" placeholder="••••">
+    <div id="lockErr" class="lockerr"></div>
+    <div class="pinrow">
+      <button onclick="pinKey('1')">1</button><button onclick="pinKey('2')">2</button><button onclick="pinKey('3')">3</button>
+      <button onclick="pinKey('4')">4</button><button onclick="pinKey('5')">5</button><button onclick="pinKey('6')">6</button>
+      <button onclick="pinKey('7')">7</button><button onclick="pinKey('8')">8</button><button onclick="pinKey('9')">9</button>
+      <button onclick="pinClear()">⌫</button><button onclick="pinKey('0')">0</button><button onclick="unlock()">✓</button>
+    </div>
+  </div>
+</div>
+
+<header><h1>💰 Mi Control Financiero</h1><div class="sub">V6 · finanzas personales privadas · datos locales</div></header>
 <main>
 <section id="home">
 <div class="grid">
@@ -72,7 +94,14 @@ nav button{background:transparent;color:#526273;padding:6px;font-size:10px}nav .
 <section id="budget" class="hidden"><div class="card"><h2>🎯 Presupuestos</h2><div id="budgetList"></div></div></section>
 <section id="goals" class="hidden"><div class="card"><h2>🏆 Objetivos</h2><button class="primary" onclick="openGoal()">➕ Nuevo objetivo</button><div id="goalList"></div></div></section>
 <section id="stats" class="hidden"><div class="card"><h2>📊 Estadísticas</h2><div id="statsBox"></div></div></section>
-<section id="config" class="hidden"><div class="card"><h2>⚙️ Configuración</h2><p class="small">Tus datos se guardan localmente en este dispositivo.</p><button class="soft" onclick="backup()">💾 Copia de seguridad</button> <button class="danger" onclick="resetApp()">🗑️ Borrar datos</button></div></section>
+<section id="config" class="hidden"><div class="card"><h2>⚙️ Configuración</h2>
+<p class="small">Tus datos financieros se guardan localmente en este dispositivo y no se comparten con otros usuarios.</p>
+<h3>🔐 Seguridad</h3>
+<p class="small" id="securityStatus"></p>
+<div class="row"><button class="soft" onclick="setupPin()">🔑 Crear/cambiar PIN</button><button class="soft" onclick="lockNow()">🔒 Bloquear</button></div>
+<br><button class="soft" onclick="backup()">💾 Copia de seguridad</button>
+<button class="danger" onclick="resetApp()">🗑️ Borrar datos</button>
+</div></section>
 </main>
 
 <div id="more" class="menu hidden">
@@ -94,8 +123,8 @@ nav button{background:transparent;color:#526273;padding:6px;font-size:10px}nav .
 <div id="modal" class="modal"><div class="sheet"><button class="soft" style="float:right" onclick="closeModal()">✕</button><h2 id="modalTitle"></h2><div id="modalBody"></div><br><div class="row"><button class="primary" id="modalSave">Guardar</button><button class="soft" onclick="closeModal()">Cancelar</button></div></div></div>
 
 <script>
-const KEY='mcf_v53';
-const OLD_KEYS=['mcf_v52','mcf_v51','mcf_v50','mcf_v41','mcf_v4'];
+const KEY='mcf_v6';
+const OLD_KEYS=['mcf_v53','mcf_v52','mcf_v51','mcf_v50','mcf_v41','mcf_v4'];
 const categories=['Alimentación','Combustible','Transporte','Hogar','Servicios','Salud','Educación','Ocio','Compras','Otros'];
 const crypto=[['Bitcoin','BTC','bitcoin'],['Ethereum','ETH','ethereum'],['Solana','SOL','solana'],['USDT','USDT','tether'],['USDC','USDC','usd-coin']];
 const etfs=[['S&P 500','^GSPC'],['IVV','IVV'],['VOO','VOO'],['SPY','SPY'],['QQQ','QQQ']];
@@ -174,7 +203,28 @@ function renderAll(){renderHome();renderMov();renderAccounts();renderCards();ren
 function backup(){let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(db,null,2)],{type:'application/json'}));a.download='mi_control_financiero_backup.json';a.click()}
 function resetApp(){if(confirm('¿Borrar todos los datos de esta aplicación?')){localStorage.removeItem(KEY);location.reload()}}
 
-$('period').value=new Date().toISOString().slice(0,7);$('period').onchange=renderAll;renderAll();
-if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js?ver=53').catch(()=>{});
+
+function hasPin(){return !!localStorage.getItem('mcf_v6_pin')}
+function setupPin(){
+  const p=prompt('Elegí un PIN de 4 a 6 números:');
+  if(p===null)return;
+  if(!/^\d{4,6}$/.test(p))return alert('El PIN debe tener entre 4 y 6 números.');
+  localStorage.setItem('mcf_v6_pin',p);
+  alert('PIN guardado en este dispositivo.');
+  renderSecurity();
+}
+function lockNow(){if(hasPin()){$('lockscreen').classList.remove('hidden');$('pinInput').value='';$('lockErr').textContent='';}else alert('Primero creá un PIN.')}
+function unlock(){
+  const p=$('pinInput').value;
+  if(p===localStorage.getItem('mcf_v6_pin')){$('lockscreen').classList.add('hidden');$('pinInput').value='';}
+  else $('lockErr').textContent='PIN incorrecto.';
+}
+function pinKey(k){$('pinInput').value=($('pinInput').value+k).slice(0,6)}
+function pinClear(){$('pinInput').value=$('pinInput').value.slice(0,-1)}
+function renderSecurity(){$('securityStatus').textContent=hasPin()?'PIN activado en este dispositivo.':'PIN no configurado.'}
+
+$('period').value=new Date().toISOString().slice(0,7);$('period').onchange=renderAll;renderAll();renderSecurity();
+if(hasPin())$('lockscreen').classList.remove('hidden');
+if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js?ver=6').catch(()=>{});
 </script>
 </body></html>
