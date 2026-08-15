@@ -123,8 +123,8 @@ nav button{background:transparent;color:#526273;padding:6px;font-size:10px}nav .
 <div id="modal" class="modal"><div class="sheet"><button class="soft" style="float:right" onclick="closeModal()">✕</button><h2 id="modalTitle"></h2><div id="modalBody"></div><br><div class="row"><button class="primary" id="modalSave">Guardar</button><button class="soft" onclick="closeModal()">Cancelar</button></div></div></div>
 
 <script>
-const KEY='mcf_v6';
-const OLD_KEYS=['mcf_v53','mcf_v52','mcf_v51','mcf_v50','mcf_v41','mcf_v4'];
+const KEY='mcf_v6_1';
+const OLD_KEYS=['mcf_v6','mcf_v53','mcf_v52','mcf_v51','mcf_v50','mcf_v41','mcf_v4'];
 const categories=['Alimentación','Combustible','Transporte','Hogar','Servicios','Salud','Educación','Ocio','Compras','Otros'];
 const crypto=[['Bitcoin','BTC','bitcoin'],['Ethereum','ETH','ethereum'],['Solana','SOL','solana'],['USDT','USDT','tether'],['USDC','USDC','usd-coin']];
 const etfs=[['S&P 500','^GSPC'],['IVV','IVV'],['VOO','VOO'],['SPY','SPY'],['QQQ','QQQ']];
@@ -199,7 +199,7 @@ async function loadQuotes(){
  await Promise.all(symbols.map(async s=>{try{let r=await fetch('https://query1.finance.yahoo.com/v8/finance/chart/'+encodeURIComponent(s)+'?range=1d&interval=1m');if(!r.ok)throw 0;let j=await r.json(),res=j.chart.result?.[0],meta=res?.meta;if(meta?.regularMarketPrice!=null){let prev=meta.previousClose||meta.chartPreviousClose;quotes[s]={price:meta.regularMarketPrice,change:prev?((meta.regularMarketPrice-prev)/prev*100):null};ok++}}catch(e){}}));
  renderQuotes();$('quoteStatus').textContent=ok?'Actualizado · '+new Date().toLocaleTimeString('es-AR'):'No se pudieron actualizar las cotizaciones desde este dispositivo';
 }
-function renderAll(){renderHome();renderMov();renderAccounts();renderCards();renderGoals();renderBudget();renderStats();renderHoldings();renderQuotes()}
+function renderAll(){try{renderHome()}catch(e){} try{renderMov()}catch(e){} try{renderAccounts()}catch(e){} try{renderCards()}catch(e){} try{renderGoals()}catch(e){} try{renderBudget()}catch(e){} try{renderStats()}catch(e){} try{renderHoldings()}catch(e){} try{renderQuotes()}catch(e){}}
 function backup(){let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(db,null,2)],{type:'application/json'}));a.download='mi_control_financiero_backup.json';a.click()}
 function resetApp(){if(confirm('¿Borrar todos los datos de esta aplicación?')){localStorage.removeItem(KEY);location.reload()}}
 
@@ -225,6 +225,12 @@ function renderSecurity(){$('securityStatus').textContent=hasPin()?'PIN activado
 
 $('period').value=new Date().toISOString().slice(0,7);$('period').onchange=renderAll;renderAll();renderSecurity();
 if(hasPin())$('lockscreen').classList.remove('hidden');
-if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js?ver=6').catch(()=>{});
+if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js?ver=6-1').catch(()=>{});
 </script>
-</body></html>
+<script>
+window.addEventListener('error',function(e){
+  var el=document.getElementById('appError');
+  if(!el){el=document.createElement('div');el.id='appError';el.style='position:fixed;bottom:90px;left:10px;right:10px;background:#fff3cd;color:#664d03;padding:10px;border-radius:10px;font-size:12px;z-index:90';document.body.appendChild(el)}
+  el.textContent='La aplicación tuvo un error de carga. Actualizá la página y, si continúa, avisame.';
+});
+</script></body></html>
