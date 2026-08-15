@@ -1,9 +1,0 @@
-{
-  "name": "Mi Control Financiero",
-  "short_name": "Mis Finanzas",
-  "start_url": "./index.html",
-  "display": "standalone",
-  "background_color": "#f4f7fb",
-  "theme_color": "#0f4c81",
-  "lang": "es-AR"
-}
