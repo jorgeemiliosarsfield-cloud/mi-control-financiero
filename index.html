@@ -228,5 +228,40 @@ function renderSecurity(){
 
 $('period').value=new Date().toISOString().slice(0,7);$('period').onchange=renderAll;renderAll();renderSecurity();if(hasPin())$('lockscreen').classList.remove('hidden');
 if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js?ver=6-pin').catch(()=>{});
+  let deferredPrompt=null;
+const installButton=document.getElementById('installButton');
+
+window.addEventListener('beforeinstallprompt',function(e){
+  e.preventDefault();
+  deferredPrompt=e;
+  if(installButton){
+    installButton.style.display='block';
+  }
+});
+
+if(installButton){
+  installButton.addEventListener('click',async function(){
+    if(!deferredPrompt){
+      alert('La instalación todavía no está disponible. Probá nuevamente en unos segundos.');
+      return;
+    }
+
+    deferredPrompt.prompt();
+
+    const result=await deferredPrompt.userChoice;
+
+    if(result.outcome==='accepted'){
+      installButton.style.display='none';
+    }
+
+    deferredPrompt=null;
+  });
+}
+
+window.addEventListener('appinstalled',function(){
+  if(installButton){
+    installButton.style.display='none';
+  }
+});
 </script>
 </body></html>
