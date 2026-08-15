@@ -1,23 +1,30 @@
 {
+  "id": "./",
   "name": "Mi Control Financiero",
-  "short_name": "Finanzas",
-  "description": "Control personal de gastos, cuentas, objetivos e inversiones.",
+  "short_name": "Mis Finanzas",
+  "description": "Control personal de gastos, cuentas, presupuestos, objetivos e inversiones.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
   "background_color": "#f3f6fa",
-  "theme_color": "#0d4f83",
+  "theme_color": "#0f5b8d",
   "lang": "es-AR",
+  "dir": "ltr",
+  "orientation": "portrait-primary",
   "prefer_related_applications": false,
   "icons": [
     {
-      "src": "icon-192.png",
+      "src": "./icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "icon-512.png",
+      "src": "./icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
