@@ -1,30 +1,35 @@
 <!doctype html>
 <html lang="es">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#0f5b8d"><link rel="manifest" href="manifest.json">
-<title>Mi Control Financiero V5.2</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0f5b8d">
+<link rel="manifest" href="manifest.json">
+<title>Mi Control Financiero V5.3</title>
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#f3f6fa;color:#203246;padding-bottom:82px}
 header{background:linear-gradient(135deg,#0d4f83,#1593bd);color:#fff;padding:22px 17px 25px;border-radius:0 0 26px 26px}
-h1{margin:0;font-size:25px}.sub{font-size:13px;opacity:.92;margin-top:4px}
-main{max-width:800px;margin:auto;padding:13px}.card{background:#fff;border-radius:18px;padding:15px;margin-bottom:12px;box-shadow:0 3px 15px #163d5a10}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.metric small{color:#718096;font-size:11px}.metric strong{display:block;font-size:22px;margin-top:5px}.blue{color:#125d8d}.green{color:#16854d}.red{color:#c33e37}
-button,input,select{font:inherit}button{border:0;border-radius:12px;padding:11px 13px;font-weight:750}.primary{background:#125d8f;color:#fff}.soft{background:#eaf2f8;color:#125d8f}.danger{background:#fdeceb;color:#b63a34}
+h1{margin:0;font-size:25px}.sub{font-size:13px;opacity:.92;margin-top:4px}main{max-width:800px;margin:auto;padding:13px}
+.card{background:#fff;border-radius:18px;padding:15px;margin-bottom:12px;box-shadow:0 3px 15px #163d5a10}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.metric small{color:#718096;font-size:11px}.metric strong{display:block;font-size:22px;margin-top:5px}
+.blue{color:#125d8d}.green{color:#16854d}.red{color:#c33e37}button,input,select{font:inherit}
+button{border:0;border-radius:12px;padding:11px 13px;font-weight:750;cursor:pointer}.primary{background:#125d8f;color:#fff}.soft{background:#eaf2f8;color:#125d8f}.danger{background:#fdeceb;color:#b63a34}
 .row{display:flex;gap:8px;flex-wrap:wrap}.row>*{flex:1;min-width:120px}input,select{width:100%;padding:11px;border:1px solid #d8e0e8;border-radius:11px;background:#fff}
 .quick{width:100%;font-size:18px;padding:15px;background:linear-gradient(135deg,#0e5b91,#168cba);color:#fff}
-h2{font-size:18px;margin:0 0 11px}.small{font-size:12px;color:#718096}.item{padding:10px 0;border-bottom:1px solid #edf0f3}.item:last-child{border:0}.amount{float:right;font-weight:800}.pill{display:inline-block;padding:4px 7px;border-radius:20px;background:#edf5fb;color:#17608f;font-size:11px}
-.progress{height:9px;background:#e9eef3;border-radius:9px;overflow:hidden}.bar{height:100%;background:#1684ae}
-.hidden{display:none!important}nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #dce4eb;display:flex;justify-content:space-around;padding:7px 3px;z-index:20}
+h2{font-size:18px;margin:0 0 11px}.small{font-size:12px;color:#718096}.item{padding:10px 0;border-bottom:1px solid #edf0f3}.item:last-child{border:0}
+.amount{float:right;font-weight:800}.pill{display:inline-block;padding:4px 7px;border-radius:20px;background:#edf5fb;color:#17608f;font-size:11px}
+.progress{height:9px;background:#e9eef3;border-radius:9px;overflow:hidden}.bar{height:100%;background:#1684ae}.hidden{display:none!important}
+nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #dce4eb;display:flex;justify-content:space-around;padding:7px 3px;z-index:20}
 nav button{background:transparent;color:#526273;padding:6px;font-size:10px}nav .active{color:#125d8f}
-.modal{position:fixed;inset:0;background:#0008;display:none;align-items:flex-end;z-index:30;padding:10px}.modal.open{display:flex}.sheet{background:#fff;width:100%;max-width:800px;margin:auto;border-radius:20px;padding:18px;max-height:90vh;overflow:auto}
-.menu{position:fixed;right:9px;bottom:66px;background:#fff;border:1px solid #e1e7ed;border-radius:16px;padding:8px;box-shadow:0 8px 25px #0003;z-index:25;width:220px}.menu button{display:block;width:100%;text-align:left;margin:3px 0}
-table{width:100%;border-collapse:collapse;font-size:12px}td,th{padding:7px;border-bottom:1px solid #edf0f3;text-align:left}
+.modal{position:fixed;inset:0;background:#0008;display:none;align-items:flex-end;z-index:30;padding:10px}.modal.open{display:flex}
+.sheet{background:#fff;width:100%;max-width:800px;margin:auto;border-radius:20px;padding:18px;max-height:90vh;overflow:auto}
+.menu{position:fixed;right:9px;bottom:66px;background:#fff;border:1px solid #e1e7ed;border-radius:16px;padding:8px;box-shadow:0 8px 25px #0003;z-index:25;width:220px}
+.menu button{display:block;width:100%;text-align:left;margin:3px 0}table{width:100%;border-collapse:collapse;font-size:12px}td,th{padding:7px;border-bottom:1px solid #edf0f3;text-align:left}
 @media(min-width:700px){.grid{grid-template-columns:repeat(4,1fr)}}
 </style>
 </head>
 <body>
-<header><h1>💰 Mi Control Financiero</h1><div class="sub">V5.2 · gasto rápido + mi cartera + mercado</div></header>
+<header><h1>💰 Mi Control Financiero</h1><div class="sub">V5.3 · control diario + cuentas + inversiones + mercado</div></header>
 <main>
 <section id="home">
 <div class="grid">
@@ -36,42 +41,46 @@ table{width:100%;border-collapse:collapse;font-size:12px}td,th{padding:7px;borde
 <div class="card"><label>📅 Período</label><input id="period" type="month"></div>
 <div class="card">
 <button class="quick" onclick="quickExpense()">⚡ GASTO RÁPIDO</button>
-<div class="row" style="margin-top:9px"><button class="soft" onclick="quickIncome()">➕ Ingreso</button><button class="soft" onclick="show('mov')">🧾 Movimientos</button><button class="soft" onclick="show('accounts')">💳 Cuentas</button></div>
-</div>
+<div class="row" style="margin-top:9px">
+<button class="soft" onclick="quickIncome()">➕ Ingreso</button>
+<button class="soft" onclick="show('mov')">🧾 Movimientos</button>
+<button class="soft" onclick="show('accounts')">💳 Cuentas</button>
+</div></div>
 <div class="card"><h2>📌 Resumen</h2><div id="summary"></div></div>
 <div class="card"><h2>🎯 Objetivos</h2><div id="homeGoals"></div></div>
 </section>
 
-<section id="mov" class="hidden">
-<div class="card"><h2>🧾 Movimientos</h2><div class="row"><input id="search" placeholder="Buscar" oninput="renderMov()"><select id="typeFilter" onchange="renderMov()"><option value="">Todos</option><option value="gasto">Gastos</option><option value="ingreso">Ingresos</option></select></div><div id="movList"></div></div>
-</section>
+<section id="mov" class="hidden"><div class="card"><h2>🧾 Movimientos</h2>
+<div class="row"><input id="search" placeholder="Buscar" oninput="renderMov()"><select id="typeFilter" onchange="renderMov()"><option value="">Todos</option><option value="gasto">Gastos</option><option value="ingreso">Ingresos</option></select></div>
+<div id="movList"></div></div></section>
 
-<section id="accounts" class="hidden">
-<div class="card"><h2>💳 Cuentas y billeteras</h2><div class="row"><input id="accName" placeholder="Ej. Mercado Pago"><select id="accType"><option>Billetera</option><option>Banco</option><option>Efectivo</option><option>Dólares</option><option>Otra</option></select><input id="accStart" type="number" placeholder="Saldo inicial"></div><br><button class="primary" onclick="addAccount()">Agregar cuenta</button></div>
-<div class="card" id="accList"></div>
-</section>
+<section id="accounts" class="hidden"><div class="card"><h2>💳 Cuentas y billeteras</h2>
+<div class="row"><input id="accName" placeholder="Ej. Mercado Pago"><select id="accType"><option>Billetera</option><option>Banco</option><option>Efectivo</option><option>Dólares</option><option>Otra</option></select><input id="accStart" type="number" placeholder="Saldo inicial"></div><br>
+<button class="primary" onclick="addAccount()">Agregar cuenta</button></div><div class="card" id="accList"></div></section>
 
 <section id="invest" class="hidden">
-<div class="card"><h2>📈 Mis inversiones</h2><div class="small">Cotizaciones: se intenta actualizar al abrir/actualizar la pantalla. Los mercados de acciones pueden tener retraso y algunos proveedores bloquean consultas directas desde GitHub Pages.</div><br><button class="primary" onclick="loadQuotes()">🔄 Actualizar cotizaciones</button><span id="quoteStatus" class="pill" style="margin-left:7px">Sin actualizar</span></div>
+<div class="card"><h2>📈 Mis inversiones</h2><div class="small">Cotizaciones en tiempo real cuando el proveedor lo permite. Cripto: USD. Acciones/ETF: USD.</div><br>
+<button class="primary" onclick="loadQuotes()">🔄 Actualizar cotizaciones</button>
+<span id="quoteStatus" class="pill" style="margin-left:7px">Sin actualizar</span></div>
 <div class="card"><h2>₿ Criptomonedas</h2><div id="cryptoQuotes"></div></div>
-<div class="card"><h2>📊 ETFs / índices</h2><div id="etfQuotes"></div></div>
-<div class="card"><h2>⭐ Magnificent Seven</h2><div id="magQuotes"></div></div>
+<div class="card"><h2>📊 S&P 500 / ETFs</h2><div id="etfQuotes"></div></div>
+<div class="card"><h2>⭐ Las 7 Magníficas</h2><div id="magQuotes"></div></div>
 <div class="card"><h2>💼 Mi cartera</h2><button class="soft" onclick="openHolding()">➕ Agregar posición</button><div id="holdings"></div></div>
 </section>
 
 <section id="cards" class="hidden"><div class="card"><h2>💳 Tarjetas</h2><button class="primary" onclick="openCard()">➕ Agregar tarjeta</button><div id="cardList"></div></div></section>
-<section id="budget" class="hidden"><div class="card"><h2>🎯 Presupuestos</h2><p class="small">Definí límites mensuales.</p><div id="budgetList"></div></div></section>
+<section id="budget" class="hidden"><div class="card"><h2>🎯 Presupuestos</h2><div id="budgetList"></div></div></section>
 <section id="goals" class="hidden"><div class="card"><h2>🏆 Objetivos</h2><button class="primary" onclick="openGoal()">➕ Nuevo objetivo</button><div id="goalList"></div></div></section>
 <section id="stats" class="hidden"><div class="card"><h2>📊 Estadísticas</h2><div id="statsBox"></div></div></section>
-<section id="config" class="hidden"><div class="card"><h2>⚙️ Configuración</h2><p class="small">Tus datos financieros se guardan localmente. No pongas contraseñas, claves privadas ni tokens de Mercado Pago.</p><button class="soft" onclick="backup()">💾 Copia de seguridad</button> <button class="danger" onclick="reset()">🗑️ Borrar datos</button></div></section>
+<section id="config" class="hidden"><div class="card"><h2>⚙️ Configuración</h2><p class="small">Tus datos se guardan localmente en este dispositivo.</p><button class="soft" onclick="backup()">💾 Copia de seguridad</button> <button class="danger" onclick="resetApp()">🗑️ Borrar datos</button></div></section>
 </main>
 
 <div id="more" class="menu hidden">
-<button class="soft" onclick="show('invest');toggleMore()">📈 Mis inversiones</button>
-<button class="soft" onclick="show('cards');toggleMore()">💳 Tarjetas</button>
-<button class="soft" onclick="show('goals');toggleMore()">🏆 Objetivos</button>
-<button class="soft" onclick="show('stats');toggleMore()">📊 Estadísticas</button>
-<button class="soft" onclick="show('config');toggleMore()">⚙️ Configuración</button>
+<button class="soft" onclick="moreGo('invest')">📈 Mis inversiones</button>
+<button class="soft" onclick="moreGo('cards')">💳 Tarjetas</button>
+<button class="soft" onclick="moreGo('goals')">🏆 Objetivos</button>
+<button class="soft" onclick="moreGo('stats')">📊 Estadísticas</button>
+<button class="soft" onclick="moreGo('config')">⚙️ Configuración</button>
 </div>
 
 <nav>
@@ -85,48 +94,87 @@ table{width:100%;border-collapse:collapse;font-size:12px}td,th{padding:7px;borde
 <div id="modal" class="modal"><div class="sheet"><button class="soft" style="float:right" onclick="closeModal()">✕</button><h2 id="modalTitle"></h2><div id="modalBody"></div><br><div class="row"><button class="primary" id="modalSave">Guardar</button><button class="soft" onclick="closeModal()">Cancelar</button></div></div></div>
 
 <script>
-const KEY='mcf_v52';
+const KEY='mcf_v53';
+const OLD_KEYS=['mcf_v52','mcf_v51','mcf_v50','mcf_v41','mcf_v4'];
 const categories=['Alimentación','Combustible','Transporte','Hogar','Servicios','Salud','Educación','Ocio','Compras','Otros'];
 const crypto=[['Bitcoin','BTC','bitcoin'],['Ethereum','ETH','ethereum'],['Solana','SOL','solana'],['USDT','USDT','tether'],['USDC','USDC','usd-coin']];
 const etfs=[['S&P 500','^GSPC'],['IVV','IVV'],['VOO','VOO'],['SPY','SPY'],['QQQ','QQQ']];
 const mags=[['Apple','AAPL'],['Microsoft','MSFT'],['Alphabet','GOOGL'],['Amazon','AMZN'],['Nvidia','NVDA'],['Meta','META'],['Tesla','TSLA']];
-let db=JSON.parse(localStorage.getItem(KEY)||'null')||{accounts:[{id:1,name:'Efectivo',type:'Efectivo',balance:0},{id:2,name:'Mercado Pago',type:'Billetera',balance:0}],moves:[],cards:[],goals:[],budgets:{},holdings:[]};
-let quotes={};
-const $=id=>document.getElementById(id), money=n=>new Intl.NumberFormat('es-AR',{style:'currency',currency:'ARS',maximumFractionDigits:2}).format(Number(n)||0);
+const $=id=>document.getElementById(id);
+const money=n=>new Intl.NumberFormat('es-AR',{style:'currency',currency:'ARS',maximumFractionDigits:2}).format(Number(n)||0);
+
+function defaultDB(){return {accounts:[{id:1,name:'Efectivo',type:'Efectivo',balance:0},{id:2,name:'Mercado Pago',type:'Billetera',balance:0}],moves:[],cards:[],goals:[],budgets:{},holdings:[]}}
+function normalize(d){
+ d=d&&typeof d==='object'?d:{};
+ if(!Array.isArray(d.accounts))d.accounts=[];
+ if(!Array.isArray(d.moves))d.moves=[];
+ if(!Array.isArray(d.cards))d.cards=[];
+ if(!Array.isArray(d.goals))d.goals=[];
+ if(!d.budgets||typeof d.budgets!=='object')d.budgets={};
+ if(!Array.isArray(d.holdings))d.holdings=[];
+ if(!d.accounts.length)d.accounts=defaultDB().accounts;
+ d.accounts=d.accounts.map((a,i)=>({id:a.id??Date.now()+i,name:a.name||'Cuenta',type:a.type||'Otra',balance:Number(a.balance)||0}));
+ d.moves=d.moves.map(m=>({...m,id:m.id??Date.now(),amount:Number(m.amount)||0}));
+ d.holdings=d.holdings.map(h=>({...h,qty:Number(h.qty)||0,cost:Number(h.cost)||0,value:Number(h.value)||0}));
+ return d;
+}
+function loadDB(){
+ try{let d=JSON.parse(localStorage.getItem(KEY)||'null');if(d)return normalize(d)}catch(e){}
+ for(const k of OLD_KEYS){try{let d=JSON.parse(localStorage.getItem(k)||'null');if(d){d=normalize(d);localStorage.setItem(KEY,JSON.stringify(d));return d}}catch(e){}}
+ return defaultDB();
+}
+let db=loadDB(),quotes={};
+
 function save(){localStorage.setItem(KEY,JSON.stringify(db));renderAll()}
-function show(id,btn){document.querySelectorAll('main section').forEach(x=>x.classList.add('hidden'));$(id).classList.remove('hidden');document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');if(id==='invest')loadQuotes();renderAll();scrollTo(0,0)}
+function show(id,btn){
+ closeMore();
+ document.querySelectorAll('main section').forEach(x=>x.classList.add('hidden'));
+ const target=$(id); if(target)target.classList.remove('hidden');
+ document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));
+ if(btn)btn.classList.add('active');
+ if(id==='invest')loadQuotes();
+ renderAll();window.scrollTo(0,0);
+}
+function moreGo(id){show(id);toggleMore()}
 function toggleMore(){$('more').classList.toggle('hidden')}
 function closeMore(){$('more').classList.add('hidden')}
 function openModal(title,body,fn){$('modalTitle').textContent=title;$('modalBody').innerHTML=body;$('modalSave').onclick=fn;$('modal').classList.add('open')}
 function closeModal(){$('modal').classList.remove('open')}
 function period(){return $('period').value||new Date().toISOString().slice(0,7)}
-function quickExpense(){openModal('⚡ Gasto rápido',`<label>Monto</label><input id="qm" type="number" inputmode="decimal" placeholder="0"><label>¿En qué?</label><input id="qd" placeholder="Ej.: supermercado, nafta, comida"><label>Categoría</label><select id="qc">${categories.map(c=>`<option>${c}</option>`).join('')}</select><label>Cuenta</label><select id="qa">${db.accounts.map(a=>`<option value="${a.id}">${a.name}</option>`).join('')}</select>`,()=>{addMove('gasto',Number($('qm').value),$('qd').value,$('qc').value,Number($('qa').value));})}
+
+function quickExpense(){openModal('⚡ Gasto rápido',`<label>Monto</label><input id="qm" type="number" inputmode="decimal" placeholder="0"><label>¿En qué?</label><input id="qd" placeholder="Ej.: supermercado, nafta, comida"><label>Categoría</label><select id="qc">${categories.map(c=>`<option>${c}</option>`).join('')}</select><label>Cuenta</label><select id="qa">${db.accounts.map(a=>`<option value="${a.id}">${a.name}</option>`).join('')}</select>`,()=>addMove('gasto',Number($('qm').value),$('qd').value,$('qc').value,Number($('qa').value)))}
 function quickIncome(){openModal('💰 Ingreso rápido',`<label>Monto</label><input id="im" type="number" inputmode="decimal"><label>Descripción</label><input id="id" placeholder="Ej.: sueldo"><label>Cuenta</label><select id="ia">${db.accounts.map(a=>`<option value="${a.id}">${a.name}</option>`).join('')}</select>`,()=>addMove('ingreso',Number($('im').value),$('id').value,'Ingreso',Number($('ia').value)))}
-function addMove(type,amount,desc,cat,accId){if(!amount||amount<=0)return alert('Ingresá un monto válido');let a=db.accounts.find(x=>x.id===accId);if(!a)return alert('Elegí una cuenta');db.moves.push({id:Date.now(),date:new Date().toISOString().slice(0,10),type,amount,desc:desc||'Sin descripción',cat,accId});a.balance += type==='ingreso'?amount:-amount;save();closeModal()}
+function addMove(type,amount,desc,cat,accId){if(!amount||amount<=0)return alert('Ingresá un monto válido');let a=db.accounts.find(x=>x.id===accId);if(!a)return alert('Elegí una cuenta');db.moves.push({id:Date.now(),date:new Date().toISOString().slice(0,10),type,amount,desc:desc||'Sin descripción',cat,accId});a.balance+=type==='ingreso'?amount:-amount;save();closeModal()}
 function addAccount(){let n=$('accName').value.trim();if(!n)return alert('Poné un nombre');db.accounts.push({id:Date.now(),name:n,type:$('accType').value,balance:Number($('accStart').value)||0});save();$('accName').value='';$('accStart').value=''}
-function delMove(id){if(!confirm('¿Eliminar este movimiento?'))return;let m=db.moves.find(x=>x.id===id),a=db.accounts.find(x=>x.id===m.accId);if(a)a.balance += m.type==='ingreso'?-m.amount:m.amount;db.moves=db.moves.filter(x=>x.id!==id);save()}
-function renderHome(){let m=db.moves.filter(x=>x.date.startsWith(period())),i=m.filter(x=>x.type==='ingreso').reduce((s,x)=>s+x.amount,0),e=m.filter(x=>x.type==='gasto').reduce((s,x)=>s+x.amount,0),a=db.accounts.reduce((s,x)=>s+x.balance,0),inv=db.holdings.reduce((s,x)=>s+(x.value||0),0);$('pat').textContent=money(a+inv);$('disp').textContent=money(a);$('inc').textContent=money(i);$('exp').textContent=money(e);$('summary').innerHTML=`<p>Balance: <b class="${i-e>=0?'green':'red'}">${money(i-e)}</b></p><p>Cuentas: <b>${db.accounts.length}</b> · Inversiones: <b>${money(inv)}</b></p>`;$('homeGoals').innerHTML=db.goals.slice(0,4).map(g=>`<div class=item><b>${g.name}</b><span class=amount>${money(g.saved)} / ${money(g.target)}</span><div class=progress><div class=bar style="width:${Math.min(100,g.saved/g.target*100)}%"></div></div></div>`).join('')||'<div class=small>Sin objetivos.</div>'}
-function renderMov(){let q=($('search')?.value||'').toLowerCase(),t=$('typeFilter')?.value||'',a=db.moves.filter(x=>(!q||(x.desc+' '+x.cat).toLowerCase().includes(q))&&(!t||x.type===t));$('movList').innerHTML=a.slice().reverse().map(x=>`<div class=item><span class="amount ${x.type==='gasto'?'red':'green'}">${x.type==='gasto'?'-':'+'}${money(x.amount)}</span><b>${x.desc}</b><div class=small>${x.date} · ${x.cat}</div><button class=danger style="margin-top:5px;padding:5px 8px" onclick="delMove(${x.id})">Eliminar</button></div>`).join('')||'<div class=small>Sin movimientos.</div>'}
-function renderAccounts(){$('accList').innerHTML=db.accounts.map((a,i)=>`<div class=item><span class=amount>${money(a.balance)}</span><b>${a.name}</b><div class=small>${a.type}</div><button class=danger style="margin-top:5px;padding:5px 8px" onclick="delAccount(${i})">Eliminar</button></div>`).join('')}
+function delMove(id){if(!confirm('¿Eliminar este movimiento?'))return;let m=db.moves.find(x=>x.id===id),a=db.accounts.find(x=>x.id===m?.accId);if(a)a.balance+=m.type==='ingreso'?-m.amount:m.amount;db.moves=db.moves.filter(x=>x.id!==id);save()}
 function delAccount(i){if(db.accounts.length<=1)return alert('Debe quedar al menos una cuenta');if(confirm('¿Eliminar esta cuenta? Los movimientos históricos se conservarán.')){db.accounts.splice(i,1);save()}}
+
+function renderHome(){let m=db.moves.filter(x=>x.date?.startsWith(period())),i=m.filter(x=>x.type==='ingreso').reduce((s,x)=>s+x.amount,0),e=m.filter(x=>x.type==='gasto').reduce((s,x)=>s+x.amount,0),a=db.accounts.reduce((s,x)=>s+x.balance,0),inv=db.holdings.reduce((s,x)=>s+(Number(x.value)||0),0);$('pat').textContent=money(a+inv);$('disp').textContent=money(a);$('inc').textContent=money(i);$('exp').textContent=money(e);$('summary').innerHTML=`<p>Balance: <b class="${i-e>=0?'green':'red'}">${money(i-e)}</b></p><p>Cuentas: <b>${db.accounts.length}</b> · Inversiones: <b>${money(inv)}</b></p>`;$('homeGoals').innerHTML=db.goals.slice(0,4).map(g=>`<div class=item><b>${g.name}</b><span class=amount>${money(g.saved)} / ${money(g.target)}</span><div class=progress><div class=bar style="width:${Math.min(100,g.target?g.saved/g.target*100:0)}%"></div></div></div>`).join('')||'<div class=small>Sin objetivos.</div>'}
+function renderMov(){let q=($('search')?.value||'').toLowerCase(),t=$('typeFilter')?.value||'',a=db.moves.filter(x=>(!q||((x.desc||'')+' '+(x.cat||'')).toLowerCase().includes(q))&&(!t||x.type===t));$('movList').innerHTML=a.slice().reverse().map(x=>`<div class=item><span class="amount ${x.type==='gasto'?'red':'green'}">${x.type==='gasto'?'-':'+'}${money(x.amount)}</span><b>${x.desc}</b><div class=small>${x.date} · ${x.cat}</div><button class=danger style="margin-top:5px;padding:5px 8px" onclick="delMove(${x.id})">Eliminar</button></div>`).join('')||'<div class=small>Sin movimientos.</div>'}
+function renderAccounts(){$('accList').innerHTML=db.accounts.map((a,i)=>`<div class=item><span class=amount>${money(a.balance)}</span><b>${a.name}</b><div class=small>${a.type}</div><button class=danger style="margin-top:5px;padding:5px 8px" onclick="delAccount(${i})">Eliminar</button></div>`).join('')}
 function renderCards(){$('cardList').innerHTML=db.cards.map(c=>`<div class=item><span class=amount>${money(Math.max(0,c.limit-c.used))}</span><b>${c.name}</b><div class=small>Límite ${money(c.limit)} · Usado ${money(c.used)} · Cierre ${c.close||'-'} · Vencimiento ${c.due||'-'}</div></div>`).join('')||'<div class=small>Sin tarjetas.</div>'}
 function openCard(){openModal('💳 Nueva tarjeta',`<label>Nombre</label><input id=cn><label>Límite</label><input id=cl type=number><div class=row><div><label>Cierre</label><input id=cc type=number></div><div><label>Vencimiento</label><input id=cv type=number></div></div>`,()=>{if(!$('cn').value)return alert('Poné un nombre');db.cards.push({id:Date.now(),name:$('cn').value,limit:Number($('cl').value)||0,used:0,close:Number($('cc').value)||0,due:Number($('cv').value)||0});save();closeModal()})}
 function renderGoals(){$('goalList').innerHTML=db.goals.map(g=>{let p=g.target?Math.min(100,g.saved/g.target*100):0;return `<div class=item><span class=amount>${p.toFixed(0)}%</span><b>${g.name}</b><div class=small>${money(g.saved)} / ${money(g.target)}</div><div class=progress><div class=bar style="width:${p}%"></div></div></div>`}).join('')||'<div class=small>Sin objetivos.</div>'}
 function openGoal(){openModal('🏆 Objetivo',`<label>Nombre</label><input id=gn><label>Meta</label><input id=gt type=number><label>Ahorrado actualmente</label><input id=gs type=number>`,()=>{if(!$('gn').value||!Number($('gt').value))return alert('Completá nombre y meta');db.goals.push({id:Date.now(),name:$('gn').value,target:Number($('gt').value),saved:Number($('gs').value)||0});save();closeModal()})}
-function renderBudget(){let m=db.moves.filter(x=>x.type==='gasto'&&x.date.startsWith(period()));$('budgetList').innerHTML=categories.map(c=>{let used=m.filter(x=>x.cat===c).reduce((s,x)=>s+x.amount,0),lim=Number(db.budgets[c]||0);return `<div class=item><span class=amount>${lim?money(used)+' / '+money(lim):money(used)}</span><b>${c}</b>${lim?`<div class=progress><div class=bar style="width:${Math.min(100,used/lim*100)}%"></div></div>`:''}</div>`}).join('')}}
-function renderStats(){let m=db.moves.filter(x=>x.date.startsWith(period())),i=m.filter(x=>x.type==='ingreso').reduce((s,x)=>s+x.amount,0),e=m.filter(x=>x.type==='gasto').reduce((s,x)=>s+x.amount,0),by={};m.filter(x=>x.type==='gasto').forEach(x=>by[x.cat]=(by[x.cat]||0)+x.amount);$('statsBox').innerHTML=`<p>Ingresos: <b class=green>${money(i)}</b></p><p>Gastos: <b class=red>${money(e)}</b></p><p>Ahorro: <b>${money(i-e)}</b></p><h3>Gastos por categoría</h3>${Object.entries(by).sort((a,b)=>b[1]-a[1]).map(x=>`<div class=item><span class=amount>${money(x[1])}</span><b>${x[0]}</b></div>`).join('')||'Sin gastos.'}`}
+function renderBudget(){let m=db.moves.filter(x=>x.type==='gasto'&&x.date?.startsWith(period()));$('budgetList').innerHTML=categories.map(c=>{let used=m.filter(x=>x.cat===c).reduce((s,x)=>s+x.amount,0),lim=Number(db.budgets[c]||0);return `<div class=item><span class=amount>${lim?money(used)+' / '+money(lim):money(used)}</span><b>${c}</b>${lim?`<div class=progress><div class=bar style="width:${Math.min(100,used/lim*100)}%"></div></div>`:''}</div>`}).join('')}
+function renderStats(){let m=db.moves.filter(x=>x.date?.startsWith(period())),i=m.filter(x=>x.type==='ingreso').reduce((s,x)=>s+x.amount,0),e=m.filter(x=>x.type==='gasto').reduce((s,x)=>s+x.amount,0),by={};m.filter(x=>x.type==='gasto').forEach(x=>by[x.cat]=(by[x.cat]||0)+x.amount);$('statsBox').innerHTML=`<p>Ingresos: <b class=green>${money(i)}</b></p><p>Gastos: <b class=red>${money(e)}</b></p><p>Ahorro: <b>${money(i-e)}</b></p><h3>Gastos por categoría</h3>${Object.entries(by).sort((a,b)=>b[1]-a[1]).map(x=>`<div class=item><span class=amount>${money(x[1])}</span><b>${x[0]}</b></div>`).join('')||'Sin gastos.'}`}
 function renderHoldings(){$('holdings').innerHTML=db.holdings.map(h=>`<div class=item><span class=amount>${money(h.value)}</span><b>${h.name}</b><div class=small>${h.qty} unidades · costo ${money(h.cost)}</div></div>`).join('')||'<div class=small>No cargaste posiciones.</div>'}
 function openHolding(){openModal('💼 Nueva posición',`<label>Activo</label><input id=hn placeholder="Ej.: BTC, IVV, QQQ"><label>Cantidad</label><input id=hq type=number step=any><label>Costo total (ARS)</label><input id=hc type=number><label>Valor actual (ARS)</label><input id=hv type=number>`,()=>{if(!$('hn').value)return alert('Poné el activo');db.holdings.push({id:Date.now(),name:$('hn').value,qty:Number($('hq').value)||0,cost:Number($('hc').value)||0,value:Number($('hv').value)||0});save();closeModal()})}
-async function loadQuotes(){ $('quoteStatus').textContent='Actualizando...';let ok=0;
-try{let ids=crypto.map(x=>x[2]).join(',');let r=await fetch('https://api.coingecko.com/api/v3/simple/price?ids='+encodeURIComponent(ids)+'&vs_currencies=usd&include_24hr_change=true');if(!r.ok)throw 0;let j=await r.json();crypto.forEach(x=>{quotes[x[1]]={price:j[x[2]]?.usd,change:j[x[2]]?.usd_24h_change}});ok+=crypto.length}catch(e){}
-renderQuotes();$('quoteStatus').textContent=ok?'Cripto actualizada · '+new Date().toLocaleTimeString('es-AR'):'No se pudo actualizar desde este dispositivo';
-}
-function quoteRow(name,symbol,q){return `<div class=item><span class=amount>${q?.price!=null?'US$ '+Number(q.price).toLocaleString('en-US',{maximumFractionDigits:6}):'—'}</span><b>${name}</b><div class=small>${symbol} · ${q?.change!=null?`24h ${q.change.toFixed(2)}%`:'cotización no disponible'}</div></div>`}
+
+function quoteRow(name,symbol,q){return `<div class=item><span class=amount>${q?.price!=null?'US$ '+Number(q.price).toLocaleString('en-US',{maximumFractionDigits:6}):'—'}</span><b>${name}</b><div class=small>${symbol} · ${q?.change!=null?`24h ${Number(q.change).toFixed(2)}%`:'cotización no disponible'}</div></div>`}
 function renderQuotes(){$('cryptoQuotes').innerHTML=crypto.map(x=>quoteRow(x[0],x[1],quotes[x[1]])).join('');$('etfQuotes').innerHTML=etfs.map(x=>quoteRow(x[0],x[1],quotes[x[1]])).join('');$('magQuotes').innerHTML=mags.map(x=>quoteRow(x[0],x[1],quotes[x[1]])).join('')}
+async function loadQuotes(){
+ $('quoteStatus').textContent='Actualizando...';let ok=0;
+ try{let ids=crypto.map(x=>x[2]).join(',');let r=await fetch('https://api.coingecko.com/api/v3/simple/price?ids='+encodeURIComponent(ids)+'&vs_currencies=usd&include_24hr_change=true');if(!r.ok)throw new Error();let j=await r.json();crypto.forEach(x=>{if(j[x[2]])quotes[x[1]]={price:j[x[2]].usd,change:j[x[2]].usd_24h_change}});ok+=crypto.length}catch(e){}
+ const symbols=[...etfs.map(x=>x[1]),...mags.map(x=>x[1])];
+ await Promise.all(symbols.map(async s=>{try{let r=await fetch('https://query1.finance.yahoo.com/v8/finance/chart/'+encodeURIComponent(s)+'?range=1d&interval=1m');if(!r.ok)throw 0;let j=await r.json(),res=j.chart.result?.[0],meta=res?.meta;if(meta?.regularMarketPrice!=null){let prev=meta.previousClose||meta.chartPreviousClose;quotes[s]={price:meta.regularMarketPrice,change:prev?((meta.regularMarketPrice-prev)/prev*100):null};ok++}}catch(e){}}));
+ renderQuotes();$('quoteStatus').textContent=ok?'Actualizado · '+new Date().toLocaleTimeString('es-AR'):'No se pudieron actualizar las cotizaciones desde este dispositivo';
+}
 function renderAll(){renderHome();renderMov();renderAccounts();renderCards();renderGoals();renderBudget();renderStats();renderHoldings();renderQuotes()}
 function backup(){let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(db,null,2)],{type:'application/json'}));a.download='mi_control_financiero_backup.json';a.click()}
-function reset(){if(confirm('¿Borrar todos los datos de esta aplicación?')){localStorage.removeItem(KEY);location.reload()}}
+function resetApp(){if(confirm('¿Borrar todos los datos de esta aplicación?')){localStorage.removeItem(KEY);location.reload()}}
+
 $('period').value=new Date().toISOString().slice(0,7);$('period').onchange=renderAll;renderAll();
-if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js?ver=53').catch(()=>{});
 </script>
 </body></html>
