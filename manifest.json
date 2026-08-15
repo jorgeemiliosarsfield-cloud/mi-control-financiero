@@ -1,11 +1,10 @@
 {
-  "name": "Mi Control Financiero V4",
+  "name": "Mi Control Financiero",
   "short_name": "Mis Finanzas",
   "start_url": "./",
-  "scope": "./",
   "display": "standalone",
   "background_color": "#f3f6fa",
   "theme_color": "#0f5b8d",
-  "lang": "es-AR",
-  "description": "Control personal de gastos, patrimonio, cuentas, tarjetas, presupuestos, objetivos e inversiones."
+  "lang": "es",
+  "icons": []
 }
