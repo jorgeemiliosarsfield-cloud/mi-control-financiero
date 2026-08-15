@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="es"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0f4c81"><link rel="manifest" href="manifest.json">
+<title>Mi Control Financiero</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f4f7fb;color:#182230;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header{background:linear-gradient(135deg,#0f4c81,#1976a8);color:#fff;padding:22px 16px 28px;border-radius:0 0 24px 24px}h1{margin:0;font-size:24px}header p{margin:6px 0 0;font-size:13px;opacity:.9}
+main{max-width:900px;margin:-12px auto 30px;padding:0 12px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.card{background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:15px;margin-top:12px;box-shadow:0 3px 12px #0000000a}
+.label{font-size:12px;color:#6b7280}.value{font-size:21px;font-weight:750;margin-top:5px}.green{color:#16834b}.red{color:#c0392b}.blue{color:#0f4c81}
+button,.filebtn{border:0;border-radius:12px;padding:11px 13px;background:#0f4c81;color:#fff;font-weight:650;display:inline-block}
+button.secondary,.filebtn.secondary{background:#eaf1f7;color:#0f4c81}.danger{background:#fff0ee!important;color:#c0392b!important}
+.actions{display:flex;flex-wrap:wrap;gap:8px}input,select{width:100%;padding:11px;border:1px solid #d7dce2;border-radius:10px;background:#fff;font-size:15px}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:10px}.full{grid-column:1/-1}.small{font-size:12px;color:#6b7280}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:9px 5px;border-bottom:1px solid #e5e7eb;text-align:left}th{color:#6b7280;font-size:11px}
+.progress{height:8px;background:#edf0f3;border-radius:8px;overflow:hidden}.bar{height:100%;background:#0f4c81}.notice{background:#fff8df;border:1px solid #f1dfa0;padding:12px;border-radius:12px;font-size:13px;line-height:1.45}
+@media(min-width:700px){.grid{grid-template-columns:repeat(4,1fr)}}
+</style></head><body>
+<header><h1>💰 Mi Control Financiero</h1><p>Versión 1 · diseñada para usar desde el celular</p></header>
+<main>
+<div class="grid">
+<div class="card"><div class="label">Ingresos del mes</div><div id="income" class="value green">$0</div></div>
+<div class="card"><div class="label">Gastos del mes</div><div id="expense" class="value red">$0</div></div>
+<div class="card"><div class="label">Balance</div><div id="balance" class="value blue">$0</div></div>
+<div class="card"><div class="label">Movimientos</div><div id="count" class="value">0</div></div>
+</div>
+<div class="card"><b>📅 Mes</b><br><br><input id="month" type="month"></div>
+<div class="card"><b>⚡ Cargar movimientos</b><br><br>
+<div class="actions"><label class="filebtn">📥 Importar CSV<input id="csv" type="file" accept=".csv,.txt" style="display:none"></label>
+<button class="secondary" onclick="downloadCSV()">📤 Exportar</button><button class="danger" onclick="clearAll()">🗑️ Borrar</button></div>
+<p class="small">Los datos de esta V1 se guardan localmente en este dispositivo.</p></div>
+<div class="card"><b>➕ Agregar movimiento</b><br><br>
+<div class="form"><div><label class="small">Fecha</label><input id="date" type="date"></div>
+<div><label class="small">Tipo</label><select id="type"><option>Gasto</option><option>Ingreso</option></select></div>
+<div class="full"><label class="small">Descripción</label><input id="desc" placeholder="Ej.: YPF, supermercado, sueldo"></div>
+<div><label class="small">Monto</label><input id="amount" type="number" step="0.01" inputmode="decimal"></div>
+<div><label class="small">Categoría</label><select id="cat"></select></div></div><br>
+<button onclick="addMovement()">Guardar movimiento</button></div>
+<div class="card"><b>🏷️ Gastos por categoría</b><div id="categories" style="margin-top:10px"></div></div>
+<div class="card"><b>🧾 Últimos movimientos</b><div style="overflow:auto;margin-top:8px">
+<table><thead><tr><th>Fecha</th><th>Descripción</th><th>Categoría</th><th>Monto</th></tr></thead><tbody id="rows"></tbody></table></div></div>
+<div class="card"><b>🔐 Mercado Pago</b><div class="notice" style="margin-top:10px"><b>Conexión automática: próxima etapa.</b><br>
+Primero probamos la app con CSV. Después conectaremos Mercado Pago mediante OAuth y permisos de lectura, sin guardar tu contraseña.</div></div>
+</main>
+<script>
+const cats=["Alimentación","Combustible","Auto","Hogar","Servicios","Salud","Transporte","Suscripciones","Ocio","Compras","Inversiones","Cripto","Ahorro","Transferencias","Otros","Rendimientos"];
+let data=JSON.parse(localStorage.getItem("finanzas_v1")||"[]");
+const $=x=>document.getElementById(x), money=n=>new Intl.NumberFormat("es-AR",{style:"currency",currency:"ARS",maximumFractionDigits:2}).format(n);
+$("cat").innerHTML=cats.map(x=>`<option>${x}</option>`).join("");$("month").value=new Date().toISOString().slice(0,7);$("date").value=new Date().toISOString().slice(0,10);
+function save(){localStorage.setItem("finanzas_v1",JSON.stringify(data));render()}
+function infer(s){let d=s.toLowerCase();if(/ypf|axion|shell|combustible|nafta|gasoil/.test(d))return"Combustible";if(/super mami|tadicor|almacor|carrefour|disco|vea|supermercado|almacen/.test(d))return"Alimentación";if(/google|netflix|spotify|personal/.test(d))return"Suscripciones";if(/farmacia/.test(d))return"Salud";if(/uber|didi|remis/.test(d))return"Transporte";if(/rendimiento/.test(d))return"Rendimientos";if(/inversion|ivv|ibit|bitcoin|btc|usdt/.test(d))return"Cripto";if(/transferencia/.test(d))return"Transferencias";return"Otros"}
+function addMovement(){let n=Math.abs(Number($("amount").value||0));if(!n||!$("desc").value.trim())return alert("Completá descripción y monto.");data.push({date:$("date").value,desc:$("desc").value.trim(),type:$("type").value,amount:n,cat:$("cat").value});$("desc").value="";$("amount").value="";save()}
+function render(){let m=$("month").value,d=data.filter(x=>x.date.startsWith(m)),inc=d.filter(x=>x.type==="Ingreso").reduce((a,x)=>a+x.amount,0),exp=d.filter(x=>x.type==="Gasto").reduce((a,x)=>a+x.amount,0);$("income").textContent=money(inc);$("expense").textContent=money(exp);$("balance").textContent=money(inc-exp);$("count").textContent=d.length;
+let map={};d.filter(x=>x.type==="Gasto").forEach(x=>map[x.cat]=(map[x.cat]||0)+x.amount);let arr=Object.entries(map).sort((a,b)=>b[1]-a[1]),max=arr[0]?.[1]||1;
+$("categories").innerHTML=arr.length?arr.map(([c,v])=>`<div style="margin:9px 0"><div style="display:flex;justify-content:space-between"><span>${c}</span><b>${money(v)}</b></div><div class="progress"><div class="bar" style="width:${Math.round(v/max*100)}%"></div></div></div>`).join(""):"<p class=small>Sin gastos en este mes.</p>";
+let last=[...d].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,30);$("rows").innerHTML=last.length?last.map(x=>`<tr><td>${new Date(x.date+"T12:00:00").toLocaleDateString("es-AR")}</td><td>${esc(x.desc)}</td><td>${x.cat}</td><td class="${x.type==="Ingreso"?"green":"red"}">${x.type==="Ingreso"?"+":"-"}${money(x.amount)}</td></tr>`).join(""):"<tr><td colspan=4>Sin movimientos.</td></tr>"}
+function esc(s){return s.replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
+$("month").onchange=render;
+$("csv").onchange=async e=>{let f=e.target.files[0];if(!f)return;let t=await f.text(),lines=t.split(/\r?\n/).filter(Boolean);if(lines.length<2)return alert("No encontré filas en el CSV.");let sep=(lines[0].split(";").length>lines[0].split(",").length)?";":",";let p=s=>s.split(sep).map(x=>x.trim().replace(/^"|"$/g,"")),h=p(lines[0]).map(x=>x.toLowerCase()),get=(r,n)=>{let i=h.findIndex(x=>n.some(y=>x.includes(y)));return i>=0?r[i]:""};let added=0;for(let i=1;i<lines.length;i++){let r=p(lines[i]),date=get(r,["date","fecha"]),desc=get(r,["description","descripción","descripcion","concept"]),a=get(r,["amount","monto","valor","net"]);a=a.replace(/\./g,"").replace(",",".").replace(/[^\d.-]/g,"");let n=Number(a);if(!date||!desc||Number.isNaN(n))continue;data.push({date:normalizeDate(date),desc,type:n<0?"Gasto":"Ingreso",amount:Math.abs(n),cat:infer(desc)});added++}save();alert("Importados: "+added+" movimientos.");e.target.value=""}
+function normalizeDate(s){let m=s.match(/(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})/);return m?`${m[3]}-${m[2].padStart(2,"0")}-${m[1].padStart(2,"0")}`:s}
+function downloadCSV(){let o=["Fecha,Descripción,Tipo,Monto,Categoría",...data.map(x=>[x.date,`"${x.desc.replace(/"/g,'""')}"`,x.type,x.amount,`"${x.cat}"`].join(","))].join("\n"),a=document.createElement("a");a.href=URL.createObjectURL(new Blob([o],{type:"text/csv;charset=utf-8"}));a.download="mis_finanzas.csv";a.click()}
+function clearAll(){if(confirm("¿Borrar todos los movimientos guardados en este dispositivo?")){data=[];save()}}
+render();
+</script></body></html>
