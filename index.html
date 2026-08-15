@@ -1,0 +1,84 @@
+<!doctype html><html lang="es"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0f4c81"><link rel="manifest" href="manifest.json"><title>Mi Control Financiero V2</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f3f6fa;color:#17202b;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header{background:linear-gradient(135deg,#0f4c81,#1976a8);color:#fff;padding:20px 15px 24px;border-radius:0 0 22px 22px}
+h1{margin:0;font-size:23px}header p{margin:4px 0;font-size:13px}main{max-width:900px;margin:auto;padding:0 12px 80px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:-7px}.card{background:#fff;border:1px solid #e4e8ee;border-radius:16px;padding:14px;margin-top:12px}
+.label{font-size:11px;color:#6b7280}.value{font-size:20px;font-weight:800;margin-top:4px}.green{color:#16834b}.red{color:#c0392b}.blue{color:#0f4c81}
+.title{font-size:17px;font-weight:800;margin-bottom:10px}.small{font-size:12px;color:#6b7280}.actions{display:flex;gap:8px;flex-wrap:wrap}
+button,.btn{border:0;border-radius:12px;padding:11px 13px;background:#0f4c81;color:#fff;font-weight:700}.secondary{background:#eaf1f7;color:#0f4c81}.danger{background:#fff0ee;color:#c0392b}
+input,select{width:100%;padding:11px;border:1px solid #d4dae2;border-radius:10px;background:#fff;font-size:15px}.form{display:grid;grid-template-columns:1fr 1fr;gap:9px}.full{grid-column:1/-1}
+.progress{height:9px;background:#edf0f3;border-radius:9px;overflow:hidden;margin-top:5px}.bar{height:100%;background:#0f4c81}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:8px 4px;border-bottom:1px solid #e4e8ee;text-align:left}th{font-size:10px;color:#6b7280}
+.section{display:none}.section.active{display:block}.nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e4e8ee;display:flex;justify-content:space-around;padding:7px 3px;z-index:5}.nav button{background:transparent;color:#4b5563;padding:5px;font-size:11px}.nav .active{color:#0f4c81}
+.modal{position:fixed;inset:0;background:#0008;display:none;align-items:flex-end;z-index:10}.modal.show{display:flex}.sheet{background:#fff;width:100%;border-radius:20px 20px 0 0;padding:18px}
+@media(min-width:700px){.grid{grid-template-columns:repeat(4,1fr)}}
+</style></head><body>
+<header><h1>💰 Mi Control Financiero</h1><p>V2 · gastos diarios, presupuestos y estadísticas</p></header>
+<main>
+<section id="inicio" class="section active">
+<div class="grid">
+<div class="card"><div class="label">Ingresos</div><div id="income" class="value green">$0</div></div>
+<div class="card"><div class="label">Gastos</div><div id="expense" class="value red">$0</div></div>
+<div class="card"><div class="label">Ahorro</div><div id="saving" class="value blue">$0</div></div>
+<div class="card"><div class="label">% ahorro</div><div id="pct" class="value blue">0%</div></div>
+</div>
+<div class="card"><b>📅 Mes</b><br><br><input id="month" type="month"></div>
+<div class="card"><button style="width:100%;font-size:17px" onclick="openForm('Gasto')">➕ GASTO RÁPIDO</button><br><br>
+<div class="actions"><button class="secondary" onclick="openForm('Ingreso')">➕ Ingreso</button><button class="secondary" onclick="go('movimientos')">🧾 Movimientos</button></div></div>
+<div class="card"><div class="title">🏷️ Gastos por categoría</div><div id="cats"></div></div>
+<div class="card"><div class="title">📌 Resumen</div><div id="insight" class="small"></div></div>
+</section>
+
+<section id="movimientos" class="section"><div class="card"><div class="title">🧾 Movimientos</div>
+<div class="actions"><button onclick="openForm('Gasto')">➕ Gasto</button><button class="secondary" onclick="openForm('Ingreso')">➕ Ingreso</button>
+<label class="btn secondary">📥 CSV<input id="csv" type="file" accept=".csv,.txt" style="display:none"></label></div><br>
+<div style="overflow:auto"><table><thead><tr><th>Fecha</th><th>Descripción</th><th>Categoría</th><th>Tipo</th><th>Monto</th></tr></thead><tbody id="rows"></tbody></table></div></div></section>
+
+<section id="presupuesto" class="section"><div class="card"><div class="title">🎯 Presupuesto mensual</div><p class="small">Tocá el monto para modificar el límite de cada categoría.</p><div id="budgets"></div></div></section>
+
+<section id="estadisticas" class="section"><div class="card"><div class="title">📊 Estadísticas</div><div id="stats"></div></div>
+<div class="card"><div class="title">📅 Gastos de los últimos 7 días</div><div id="days"></div></div></section>
+
+<section id="config" class="section"><div class="card"><div class="title">⚙️ Más</div>
+<p class="small">V2 guarda los datos localmente en el teléfono. Todavía no guarda contraseñas ni claves de Mercado Pago.</p>
+<div class="actions"><button class="secondary" onclick="exportData()">📤 Exportar</button><button class="danger" onclick="clearData()">🗑️ Borrar datos</button></div></div></section>
+</main>
+
+<nav class="nav"><button class="active" onclick="go('inicio',this)">🏠<br>Inicio</button><button onclick="go('movimientos',this)">🧾<br>Movimientos</button><button onclick="go('presupuesto',this)">🎯<br>Presupuesto</button><button onclick="go('estadisticas',this)">📊<br>Estadísticas</button><button onclick="go('config',this)">⚙️<br>Más</button></nav>
+
+<div id="modal" class="modal"><div class="sheet"><div class="title">➕ <span id="formTitle"></span></div>
+<div class="form"><div><label class="small">Fecha</label><input id="fdate" type="date"></div><div><label class="small">Tipo</label><select id="ftype"><option>Gasto</option><option>Ingreso</option></select></div>
+<div class="full"><label class="small">Descripción</label><input id="fdesc" placeholder="Ej.: YPF, supermercado, sueldo"></div>
+<div><label class="small">Monto</label><input id="famount" type="number" inputmode="decimal"></div><div><label class="small">Categoría</label><select id="fcat"></select></div></div><br>
+<div class="actions"><button onclick="saveMovement()">💾 Guardar</button><button class="secondary" onclick="closeForm()">Cancelar</button></div></div></div>
+
+<script>
+const C=["Alimentación","Combustible","Auto","Hogar","Servicios","Salud","Transporte","Suscripciones","Ocio","Compras","Inversiones","Cripto","Ahorro","Transferencias","Otros","Rendimientos"];
+const DEF={"Alimentación":300000,"Combustible":150000,"Auto":100000,"Hogar":250000,"Servicios":150000,"Salud":100000,"Transporte":80000,"Suscripciones":50000,"Ocio":100000,"Compras":100000,"Inversiones":0,"Cripto":0,"Ahorro":0,"Transferencias":0,"Otros":100000,"Rendimientos":0};
+let d=JSON.parse(localStorage.getItem("finanzas_v2")||"[]"), b=JSON.parse(localStorage.getItem("presupuestos_v2")||JSON.stringify(DEF));
+const $=x=>document.getElementById(x);$("fcat").innerHTML=C.map(x=>"<option>"+x+"</option>").join("");$("month").value=new Date().toISOString().slice(0,7);
+$("fdate").value=new Date().toISOString().slice(0,10);function money(n){return new Intl.NumberFormat("es-AR",{style:"currency",currency:"ARS",maximumFractionDigits:2}).format(n)}
+function md(){return d.filter(x=>x.date.startsWith($("month").value))}
+function save(){localStorage.setItem("finanzas_v2",JSON.stringify(d));localStorage.setItem("presupuestos_v2",JSON.stringify(b));render()}
+function go(id,btn){document.querySelectorAll(".section").forEach(x=>x.classList.remove("active"));$(id).classList.add("active");if(btn){document.querySelectorAll(".nav button").forEach(x=>x.classList.remove("active"));btn.classList.add("active")}render()}
+function openForm(t){$("ftype").value=t;$("formTitle").textContent=t==="Gasto"?"Nuevo gasto":"Nuevo ingreso";$("fdate").value=new Date().toISOString().slice(0,10);$("fdesc").value="";$("famount").value="";$("modal").classList.add("show")}
+function closeForm(){$("modal").classList.remove("show")}
+function saveMovement(){let n=Math.abs(Number($("famount").value||0)),x=$("fdesc").value.trim();if(!n||!x)return alert("Completá descripción y monto.");d.push({id:Date.now(),date:$("fdate").value,desc:x,type:$("ftype").value,amount:n,cat:$("fcat").value});save();closeForm()}
+function infer(s){s=s.toLowerCase();if(/ypf|axion|shell|nafta|gasoil|gnc/.test(s))return"Combustible";if(/super mami|tadicor|almacor|carrefour|disco|vea|supermercado|almacen|carnicer/.test(s))return"Alimentación";if(/netflix|spotify|google|personal/.test(s))return"Suscripciones";if(/farmacia|hospital|clinica|medico/.test(s))return"Salud";if(/uber|didi|remis|colectivo/.test(s))return"Transporte";if(/rendimiento|interes/.test(s))return"Rendimientos";if(/bitcoin|btc|usdt|ibit|ivv|cedear|bono|inversion/.test(s))return"Inversiones";if(/transferencia/.test(s))return"Transferencias";return"Otros"}
+function render(){let x=md(),inc=x.filter(a=>a.type==="Ingreso").reduce((s,a)=>s+a.amount,0),exp=x.filter(a=>a.type==="Gasto").reduce((s,a)=>s+a.amount,0),sav=inc-exp;$("income").textContent=money(inc);$("expense").textContent=money(exp);$("saving").textContent=money(sav);$("pct").textContent=(inc?(sav/inc*100):0).toFixed(1)+"%";
+let m={};x.filter(a=>a.type==="Gasto").forEach(a=>m[a.cat]=(m[a.cat]||0)+a.amount);let arr=Object.entries(m).sort((a,z)=>z[1]-a[1]),mx=arr[0]?.[1]||1;$("cats").innerHTML=arr.length?arr.map(a=>"<div style='margin:9px 0'><div style='display:flex;justify-content:space-between'><span>"+a[0]+"</span><b>"+money(a[1])+"</b></div><div class='progress'><div class='bar' style='width:"+Math.round(a[1]/mx*100)+"%'></div></div></div>").join(""):"<div class=small>No hay gastos este mes.</div>";
+$("insight").innerHTML=arr[0]?"Mayor gasto: <b>"+arr[0][0]+"</b> ("+money(arr[0][1])+"). Balance: <b>"+money(sav)+"</b>.":"Todavía no hay datos.";
+let last=[...x].sort((a,z)=>z.date.localeCompare(a.date)||z.id-a.id).slice(0,100);$("rows").innerHTML=last.length?last.map(a=>"<tr><td>"+ar(a.date)+"</td><td>"+esc(a.desc)+"</td><td>"+a.cat+"</td><td>"+a.type+"</td><td class='"+(a.type==="Ingreso"?"green":"red")+"'>"+(a.type==="Ingreso"?"+":"-")+money(a.amount)+"</td></tr>").join(""):"<tr><td colspan=5>No hay movimientos.</td></tr>";
+$("budgets").innerHTML=C.map(c=>{let s=x.filter(a=>a.type==="Gasto"&&a.cat===c).reduce((q,a)=>q+a.amount,0),v=Number(b[c]||0);if(!v&&!s)return"";let p=v?Math.min(100,s/v*100):0;return "<div style='margin:13px 0'><div style='display:flex;justify-content:space-between'><b>"+c+"</b><span>"+money(s)+" / "+(v?money(v):"sin límite")+"</span></div><div class=progress><div class=bar style='width:"+p+"%;background:"+(p>=100?"#c0392b":p>=80?"#b7791f":"#0f4c81")+"'></div></div><input type=number value='"+v+"' onchange="setB('"+c+"',this.value)" style='margin-top:6px'></div>"}).join("");
+$("stats").innerHTML="<p><b>Gasto total:</b> "+money(exp)+"</p><p><b>Ingreso total:</b> "+money(inc)+"</p><p><b>Balance:</b> "+money(sav)+"</p><p><b>Promedio diario:</b> "+money(exp/Math.max(1,new Set(x.map(a=>a.date)).size))+"</p><p><b>Categoría principal:</b> "+(arr[0]?.[0]||"—")+"</p>";
+let ds=[],now=new Date();for(let i=6;i>=0;i--){let q=new Date(now);q.setDate(now.getDate()-i);let k=q.toISOString().slice(0,10),v=x.filter(a=>a.type==="Gasto"&&a.date===k).reduce((s,a)=>s+a.amount,0);ds.push([k,v])}let mm=Math.max(1,...ds.map(a=>a[1]));$("days").innerHTML=ds.map(a=>"<div style='margin:9px 0;display:flex;gap:8px;align-items:center'><span style='width:45px'>"+ar(a[0])+"</span><div class=progress style='flex:1'><div class=bar style='width:"+Math.round(a[1]/mm*100)+"%'></div></div><b>"+money(a[1])+"</b></div>").join("")}
+function setB(c,v){b[c]=Math.max(0,Number(v)||0);save()}function ar(s){return new Date(s+"T12:00:00").toLocaleDateString("es-AR",{day:"2-digit",month:"2-digit"})}function esc(s){return s.replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
+function exportData(){let o=["Fecha,Descripción,Tipo,Monto,Categoría",...d.map(a=>[a.date,'"'+a.desc.replaceAll('"','""')+'"',a.type,a.amount,'"'+a.cat+'"'].join(","))].join("\n"),a=document.createElement("a");a.href=URL.createObjectURL(new Blob([o],{type:"text/csv"}));a.download="mis_finanzas_v2.csv";a.click()}
+function clearData(){if(confirm("¿Borrar todos los datos de este teléfono?")){d=[];localStorage.removeItem("finanzas_v2");save()}}
+$("month").onchange=render;
+$("csv").onchange=async e=>{let f=e.target.files[0];if(!f)return;let t=await f.text(),l=t.split(/\r?\n/).filter(Boolean);if(l.length<2)return alert("No encontré filas.");let sep=l[0].split(";").length>l[0].split(",").length?";":",",p=s=>s.split(sep).map(x=>x.trim().replace(/^"|"$/g,"")),h=p(l[0]).map(x=>x.toLowerCase()),get=(r,n)=>{let i=h.findIndex(z=>n.some(y=>z.includes(y)));return i>=0?r[i]:""};let n=0;for(let i=1;i<l.length;i++){let r=p(l[i]),date=get(r,["fecha","date"]),desc=get(r,["descripción","descripcion","description","concept"]),a=get(r,["monto","amount","valor","net"]);a=a.replace(/\./g,"").replace(",",".").replace(/[^\d.-]/g,"");let v=Number(a);if(!date||!desc||Number.isNaN(v))continue;d.push({id:Date.now()+i,date:(date.match(/(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})/)||[]).length?date.replace(/(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})/,"$3-$2-$1"):date,desc,type:v<0?"Gasto":"Ingreso",amount:Math.abs(v),cat:infer(desc)});n++}save();alert("Importados: "+n+" movimientos.");e.target.value=""};
+render();
+</script></body></html>
