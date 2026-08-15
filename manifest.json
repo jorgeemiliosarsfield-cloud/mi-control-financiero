@@ -1,1 +1,9 @@
-{"name":"Mi Control Financiero","short_name":"Finanzas","start_url":"./","display":"standalone","background_color":"#f2f6fa","theme_color":"#0f5b8d","lang":"es"}
+{
+  "name": "Mi Control Financiero V5.2",
+  "short_name": "Mis Finanzas",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f3f6fa",
+  "theme_color": "#0f5b8d",
+  "lang": "es-AR"
+}
