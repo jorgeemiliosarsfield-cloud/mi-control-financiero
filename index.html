@@ -186,8 +186,105 @@ function renderGoals(){$('goalList').innerHTML=db.goals.map(g=>{let p=g.target?M
 function openGoal(){openModal('🏆 Objetivo',`<label>Nombre</label><input id=gn><label>Meta</label><input id=gt type=number><label>Ahorrado actualmente</label><input id=gs type=number>`,()=>{if(!$('gn').value||!Number($('gt').value))return alert('Completá nombre y meta');db.goals.push({id:Date.now(),name:$('gn').value,target:Number($('gt').value),saved:Number($('gs').value)||0});save();closeModal()})}
 function renderBudget(){let m=db.moves.filter(x=>x.type==='gasto'&&x.date?.startsWith(period()));$('budgetList').innerHTML=categories.map(c=>{let used=m.filter(x=>x.cat===c).reduce((s,x)=>s+x.amount,0),lim=Number(db.budgets[c]||0);return `<div class=item><span class=amount>${lim?money(used)+' / '+money(lim):money(used)}</span><b>${c}</b>${lim?`<div class=progress><div class=bar style="width:${Math.min(100,used/lim*100)}%"></div></div>`:''}</div>`}).join('')}
 function renderStats(){let m=db.moves.filter(x=>x.date?.startsWith(period())),i=m.filter(x=>x.type==='ingreso').reduce((s,x)=>s+x.amount,0),e=m.filter(x=>x.type==='gasto').reduce((s,x)=>s+x.amount,0),by={};m.filter(x=>x.type==='gasto').forEach(x=>by[x.cat]=(by[x.cat]||0)+x.amount);$('statsBox').innerHTML=`<p>Ingresos: <b class=green>${money(i)}</b></p><p>Gastos: <b class=red>${money(e)}</b></p><p>Ahorro: <b>${money(i-e)}</b></p><h3>Gastos por categoría</h3>${Object.entries(by).sort((a,b)=>b[1]-a[1]).map(x=>`<div class=item><span class=amount>${money(x[1])}</span><b>${x[0]}</b></div>`).join('')||'Sin gastos.'}`}
-function renderHoldings(){$('holdings').innerHTML=db.holdings.map(h=>`<div class=item><span class=amount>${money(h.value)}</span><b>${h.name}</b><div class=small>${h.qty} unidades · costo ${money(h.cost)}</div></div>`).join('')||'<div class=small>No cargaste posiciones.</div>'}
-function openHolding(){openModal('💼 Nueva posición',`<label>Activo</label><input id=hn placeholder="Ej.: BTC, IVV, QQQ"><label>Cantidad</label><input id=hq type=number step=any><label>Costo total (ARS)</label><input id=hc type=number><label>Valor actual (ARS)</label><input id=hv type=number>`,()=>{if(!$('hn').value)return alert('Poné el activo');db.holdings.push({id:Date.now(),name:$('hn').value,qty:Number($('hq').value)||0,cost:Number($('hc').value)||0,value:Number($('hv').value)||0});save();closeModal()})}
+function renderHoldings(){
+  $('holdings').innerHTML=
+    db.holdings.map(h=>{
+
+      const qty=Number(h.qty)||0;
+      const buy=Number(h.buyPrice)||0;
+
+      const current=
+        Number(
+          quotes[h.name]?.price
+        )||buy;
+
+      const value=
+        qty*current;
+
+      const cost=
+        qty*buy;
+
+      const profit=
+        value-cost;
+
+      const pct=
+        cost
+          ? (profit/cost)*100
+          : 0;
+
+      const cls=
+        profit>=0
+          ? 'green'
+          : 'red';
+
+      return `
+        <div class="item">
+
+          <span class="amount ${cls}">
+            ${h.currency==='USD'?'US$ ':'$ '}
+            ${value.toLocaleString(
+              'es-AR',
+              {
+                minimumFractionDigits:2,
+                maximumFractionDigits:2
+              }
+            )}
+          </span>
+
+          <b>${h.name}</b>
+
+          <div class="small">
+            Cantidad: ${qty}
+          </div>
+
+          <div class="small">
+            Compra:
+            ${h.currency==='USD'?'US$ ':'$ '}
+            ${buy.toLocaleString(
+              'es-AR',
+              {
+                minimumFractionDigits:2,
+                maximumFractionDigits:2
+              }
+            )}
+          </div>
+
+          <div class="small">
+            Actual:
+            ${h.currency==='USD'?'US$ ':'$ '}
+            ${current.toLocaleString(
+              'es-AR',
+              {
+                minimumFractionDigits:2,
+                maximumFractionDigits:2
+              }
+            )}
+          </div>
+
+          <div class="${cls}"
+               style="font-weight:800;margin-top:5px">
+
+            ${profit>=0?'+':''}
+            ${h.currency==='USD'?'US$ ':'$ '}
+            ${profit.toLocaleString(
+              'es-AR',
+              {
+                minimumFractionDigits:2,
+                maximumFractionDigits:2
+              }
+            )}
+
+            &nbsp;(${profit>=0?'+':''}${pct.toFixed(2)}%)
+
+          </div>
+
+        </div>
+      `;
+
+    }).join('') ||
+    '<div class=small>No cargaste posiciones.</div>';
+  }
+function openHolding(){openModal('💼 Nueva posición',`<label>Ticker / símbolo</label><input id=hn placeholder="Ej.: AAPL, NVDA, MELI, BTC, IVV"><label>Cantidad</label><input id=hq type=number step=any placeholder="Ej.: 10"><label>Precio de compra por unidad</label><input id=hp type=number step=any placeholder="Ej.: 200"><label>Moneda</label><select id=hm><option value="USD">USD</option><option value="ARS">ARS</option></select>`,()=>{let name=$('hn').value.trim().toUpperCase(),qty=Number($('hq').value)||0,buy=Number($('hp').value)||0,currency=$('hm').value;if(!name)return alert('Poné el ticker o símbolo');if(qty<=0)return alert('Poné una cantidad válida');if(buy<=0)return alert('Poné el precio de compra');db.holdings.push({id:Date.now(),name,qty,buyPrice:buy,currency,cost:qty*buy,value:qty*buy,currentPrice:buy,profit:0,profitPct:0});save();closeModal()})}
 
 function quoteRow(name,symbol,q){return `<div class=item><span class=amount>${q?.price!=null?'US$ '+Number(q.price).toLocaleString('en-US',{maximumFractionDigits:6}):'—'}</span><b>${name}</b><div class=small>${symbol} · ${q?.change!=null?`24h ${Number(q.change).toFixed(2)}%`:'cotización no disponible'}</div></div>`}
 function renderQuotes(){$('cryptoQuotes').innerHTML=crypto.map(x=>quoteRow(x[0],x[1],quotes[x[1]])).join('');$('etfQuotes').innerHTML=etfs.map(x=>quoteRow(x[0],x[1],quotes[x[1]])).join('');$('magQuotes').innerHTML=mags.map(x=>quoteRow(x[0],x[1],quotes[x[1]])).join('')}
