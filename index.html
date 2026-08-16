@@ -227,9 +227,10 @@ function renderSecurity(){
 }
 
 $('period').value=new Date().toISOString().slice(0,7);$('period').onchange=renderAll;renderAll();renderSecurity();if(hasPin())$('lockscreen').classList.remove('hidden');
-if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js?ver=6-pin').catch(()=>{});
-  let deferredPrompt=null;
-const installButton=document.getElementById('installButton');
+if('serviceWorker'in navigator)
+navigator.serviceWorker.register('sw.js?ver=6-pin').catch(()=>{});
+let deferredPrompt=null;
+const installButton=document.getElementById('installButton');  
 
 window.addEventListener('beforeinstallprompt',function(e){
   e.preventDefault();
